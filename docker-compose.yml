@@ -3,13 +3,11 @@ services:
     image: postgres:15
     container_name: postgres-db
     ports:
-      - "5434:5432"
+      - "5434:5434"
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: user
       POSTGRES_DB: citronix
-        - POSTGRES_HOST_AUTH_METHOD=trust
-
     volumes:
       - pgdata:/var/lib/postgresql/data
 
@@ -28,9 +26,14 @@ services:
     image: citronix-spring-boot-app
     container_name: spring-boot-app
     ports:
-      - "8080:8080"
+      - "8090:8090"
     depends_on:
       - postgres-db
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres-db:5432/citronix
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: user
+      SPRING_APPLICATION_NAME: citronix
 
 volumes:
   pgdata:
