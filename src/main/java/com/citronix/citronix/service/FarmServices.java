@@ -24,18 +24,15 @@ public class FarmServices {
         if (farmDto == null) {
             throw new NullPointerException("farmDto is null");
         }
-        Farm farm = new Farm( null,farmDto.name() , farmDto.location() , farmDto.surfaceArea() , LocalDate.now() , null);
-        farm = farmRepository.save(farm);
-        FarmDto farmDtoDto = new FarmDto( farm.getId() ,farm.getName()  , farm.getLocation() , farm.getSurfaceArea() ,farm.getCreationTime() , farm.getDeletedAt());
-        return farmDtoDto;
+        Farm farm = farmMapper.farmDtoToFarm(farmDto);
+        farm.setCreationTime(LocalDate.now());
+      return farmMapper.farmToFarmDto(farmRepository.save(farm));
     }
     public FarmDto updateFarm(FarmDto farmDto) {
         if (farmDto == null) {
             throw new NullPointerException("farmDto is null");
         }
-        Farm farm = new Farm(farmDto.id() , farmDto.name() , farmDto.location() , farmDto.surfaceArea() , LocalDate.now() , null);
-        farm = farmRepository.save(farm);
-        return farmMapper.farmToFarmDto(farm);
+       return farmMapper.farmToFarmDto(farmRepository.save(farmMapper.farmDtoToFarm(farmDto)));
     }
     public void deleteFarm(UUID id) {
         Farm fetchedFarm = farmRepository.findById(id);
