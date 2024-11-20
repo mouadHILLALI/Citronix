@@ -13,7 +13,10 @@ import com.citronix.citronix.repository.FieldRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class FieldServices {
@@ -25,18 +28,29 @@ public class FieldServices {
     private FarmRepository farmRepository;
     @Autowired
     private FarmMapper farmMapper;
-    public FieldDto create(FieldDto fieldDto) {
-        Farm farm = farmRepository.findById(fieldDto.farmDto().id());
+    public List<FieldDto> create(List<FieldDto> fieldDtos) {
+        Farm farm = farmRepository.findById(fieldDtos.get(0).farmDto().id());
         if (farm == null) {
             throw new NoFarmWasFoundException(
-                    "No farm was found with the following ID: " + fieldDto.farmDto().id());
+                    "No farm was found with the following ID: " + fieldDtos.get(0).farmDto().id());
         }
-        Field field = fieldMapper.fieldDtoToField(fieldDto);
-        field.setFarm(farm);
-        field = fieldRepository.save(field);
-        FarmDto farmDto = farmMapper.farmToFarmDto(field.getFarm());
-        FieldDto newFieldDto = new FieldDto(field.getId() , field.getSurface() ,farmDto);
-        return newFieldDto;
+        List<Field> fields = fieldDtos.stream().map(fieldDto -> {
+            Field field = fieldMapper.fieldDtoToField(fieldDto);
+            if (field.getSurface() == 0) {
+                throw new NullPointerException("surface is null");
+            }
+            field.setSurface(field.getSurface());
+            field.setFarm(farm);
+            return field;
+        }).collect(Collectors.toList());
+
+        List<Field> savedFields = fieldRepository.saveAll(fields);
+        List<FieldDto> savedFieldDtos = savedFields.stream().map(field -> {
+            FarmDto farmDto = farmMapper.farmToFarmDto(field.getFarm());
+            FieldDto newFieldDto = new FieldDto(field.getId() , field.getSurface() ,farmDto);
+            return newFieldDto;
+        }).collect(Collectors.toList());
+       return savedFieldDtos;
     }
     public FieldDto update(FieldDto fieldDto) {
         Farm farm = farmRepository.findById(fieldDto.farmDto().id());

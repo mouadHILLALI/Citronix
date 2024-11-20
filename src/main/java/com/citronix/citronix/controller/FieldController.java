@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -17,7 +18,7 @@ public class FieldController {
     private FieldServices fieldServices;
 
     @PostMapping("/create")
-    public FieldDto createField(@RequestBody @Validated FieldDto fieldDto) {
+    public List<FieldDto> createField(@RequestBody @Validated List<FieldDto> fieldDto) {
         return fieldServices.create(fieldDto);
     }
     @PostMapping("/update")
