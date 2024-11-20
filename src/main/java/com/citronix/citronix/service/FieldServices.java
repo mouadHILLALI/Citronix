@@ -2,8 +2,9 @@ package com.citronix.citronix.service;
 
 import com.citronix.citronix.dto.FarmDto;
 import com.citronix.citronix.dto.FieldDto;
-import com.citronix.citronix.exceptions.NoFarmWasFoundException;
-import com.citronix.citronix.exceptions.NoFieldWasFound;
+import com.citronix.citronix.exceptions.EntitesCustomExceptions.NoFarmWasFoundException;
+import com.citronix.citronix.exceptions.EntitesCustomExceptions.NoFieldWasFound;
+import com.citronix.citronix.helper.Validator;
 import com.citronix.citronix.mapper.FarmMapper;
 import com.citronix.citronix.mapper.FieldMapper;
 import com.citronix.citronix.model.Farm;
@@ -13,7 +14,6 @@ import com.citronix.citronix.repository.FieldRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -28,18 +28,19 @@ public class FieldServices {
     private FarmRepository farmRepository;
     @Autowired
     private FarmMapper farmMapper;
+    @Autowired
+    private Validator validator;
     public List<FieldDto> create(List<FieldDto> fieldDtos) {
         Farm farm = farmRepository.findById(fieldDtos.get(0).farmDto().id());
         if (farm == null) {
             throw new NoFarmWasFoundException(
                     "No farm was found with the following ID: " + fieldDtos.get(0).farmDto().id());
         }
+        validator.validateNumberOfFieldsPerFarm(fieldDtos);
+        validator.totalSurfaceVsFarm(farm.getSurfaceArea() ,fieldDtos);
         List<Field> fields = fieldDtos.stream().map(fieldDto -> {
             Field field = fieldMapper.fieldDtoToField(fieldDto);
-            if (field.getSurface() == 0) {
-                throw new NullPointerException("surface is null");
-            }
-            field.setSurface(field.getSurface());
+            validator.validateFieldSurfaceVsFarmSurface(farm.getSurfaceArea(), field.getSurface());
             field.setFarm(farm);
             return field;
         }).collect(Collectors.toList());
@@ -70,5 +71,4 @@ public class FieldServices {
         fieldRepository.delete(field);
         return true;
     }
-
 }
