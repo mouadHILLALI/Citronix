@@ -50,15 +50,15 @@ public class Validator {
         }
         throw new IllegalPlantationDate("Tree with the age:"+tree.age()+" cannot be planted in :" + tree.plantationDate() );
     }
-    public boolean validateProductivity(TreeDto tree) {
-        double productivity = tree.productivity();
-        if (tree.age() < 3 && productivity != 2.5 ) {
-            throw new IllegalArgumentException("Productivity cant be more than 2.5 kg for a tree less than three years of age");
-        } else if (tree.age()>3&&tree.age()<10&& productivity != 12) {
-            throw new IllegalArgumentException("Productivity should be between 3 kg and 12 kg for a mature tree");
-        }else if (tree.age()>10&&productivity!=20 ) {
-            throw new IllegalArgumentException("Productivity should be between 12 kg and 20 kg for an old tree");
+    public double validateProductivity(TreeDto tree) {
+        double productivity = 0;
+        if (tree.age()<3){
+            productivity = 2.5;
+        } else if (tree.age()>3 &&tree.age()<10) {
+            productivity = 12;
+        } else {
+            productivity = 20;
         }
-        return true;
+        return productivity;
     }
 }

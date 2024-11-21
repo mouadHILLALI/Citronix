@@ -1,15 +1,10 @@
 package com.citronix.citronix.model;
 
 import com.citronix.citronix.enums.TreeStatus;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDate;
 import java.util.UUID;
@@ -21,6 +16,7 @@ import java.util.UUID;
 @Entity(name = "trees")
 public class Tree {
     @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
     @NotNull(message = "age cannot be null")
     @DecimalMin(value = "1" , message = "age cannot be less than 1")
@@ -28,7 +24,9 @@ public class Tree {
     private LocalDate plantationDate;
     @DecimalMin(value = "2.5" , message = "Tree productivity cannot be less than 2.5 Kg per season")
     private double productivity;
+    @Enumerated(EnumType.STRING)
     private TreeStatus status;
-    @OneToOne
+    @ManyToOne
+    @JoinColumn(name = "field_id")
     private Field field;
 }
