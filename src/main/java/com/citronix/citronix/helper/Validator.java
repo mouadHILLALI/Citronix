@@ -1,11 +1,11 @@
 package com.citronix.citronix.helper;
 
 import com.citronix.citronix.dto.FieldDto;
-import com.citronix.citronix.exceptions.EntitesCustomExceptions.FieldSurfaceException;
-import com.citronix.citronix.exceptions.EntitesCustomExceptions.FieldsGeneralException;
-import com.citronix.citronix.exceptions.EntitesCustomExceptions.IllegalFieldsNumber;
+import com.citronix.citronix.dto.TreeDto;
+import com.citronix.citronix.exceptions.EntitesCustomExceptions.*;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Component
@@ -29,6 +29,35 @@ public class Validator {
         double totalSurface = fields.stream().mapToDouble(field -> field.surface()).sum();
         if (totalSurface > farmSurface) {
             throw new FieldsGeneralException("fields total surface cannot be more than farm surface: " + totalSurface + "square meters");
+        }
+        return true;
+    }
+    public boolean validateFieldTreesDensity(double fieldSurface ,List<TreeDto> trees) {
+         final double treeDensity = 100 ;
+         double allowedNumberOfTrees = fieldSurface / treeDensity;
+         if (allowedNumberOfTrees < trees.size()) {
+             throw new TreesDensityException("Field cannot contain more than this number of trees: " + allowedNumberOfTrees);
+         }
+         return true;
+    }
+    public boolean validatePlantationDate(TreeDto tree) {
+        if (tree.plantationDate() == null) {
+            throw new IllegalArgumentException("Plantation date cannot be null.");
+        }
+        int months = tree.plantationDate().getMonth().getValue();
+        if (months > 2 && months < 6) {
+            return true;
+        }
+        throw new IllegalPlantationDate("Tree with the age:"+tree.age()+" cannot be planted in :" + tree.plantationDate() );
+    }
+    public boolean validateProductivity(TreeDto tree) {
+        double productivity = tree.productivity();
+        if (tree.age() < 3 && productivity != 2.5 ) {
+            throw new IllegalArgumentException("Productivity cant be more than 2.5 kg for a tree less than three years of age");
+        } else if (tree.age()>3&&tree.age()<10&& productivity != 12) {
+            throw new IllegalArgumentException("Productivity should be between 3 kg and 12 kg for a mature tree");
+        }else if (tree.age()>10&&productivity!=20 ) {
+            throw new IllegalArgumentException("Productivity should be between 12 kg and 20 kg for an old tree");
         }
         return true;
     }
