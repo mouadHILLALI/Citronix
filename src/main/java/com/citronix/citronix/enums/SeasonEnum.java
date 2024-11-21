@@ -1,5 +1,5 @@
 package com.citronix.citronix.enums;
 
 public enum SeasonEnum {
-    FALL  , SPRING , SUMMER , AUTUMN  ;
+    FALL  , SPRING , SUMMER , WINTER  ;
 }
