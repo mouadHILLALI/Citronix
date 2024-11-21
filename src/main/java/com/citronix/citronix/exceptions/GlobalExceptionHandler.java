@@ -28,4 +28,12 @@ public class GlobalExceptionHandler {
     public ResponseEntity<String> handleFieldsGeneralException(FieldsGeneralException ex) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
     }
+    @ExceptionHandler(TreesDensityException.class)
+    public ResponseEntity<String> handleTreesDensityException(TreesDensityException ex) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+    }
+    @ExceptionHandler(IllegalPlantationDate.class)
+    public ResponseEntity<String> handleIllegalPlantationDate(IllegalPlantationDate ex) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+    }
 }
