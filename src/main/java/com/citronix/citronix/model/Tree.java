@@ -7,6 +7,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.UUID;
 
 @Data
@@ -29,4 +30,6 @@ public class Tree {
     @ManyToOne
     @JoinColumn(name = "field_id")
     private Field field;
+    @ManyToMany
+    private List<Crop> crops;
 }

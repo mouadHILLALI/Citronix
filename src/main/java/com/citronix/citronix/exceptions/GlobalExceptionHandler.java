@@ -36,4 +36,8 @@ public class GlobalExceptionHandler {
     public ResponseEntity<String> handleIllegalPlantationDate(IllegalPlantationDate ex) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
     }
+    @ExceptionHandler(IllegalHarvestDate.class)
+    public ResponseEntity<String> handleIllegalHarvestDate(IllegalHarvestDate ex) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+    }
 }
