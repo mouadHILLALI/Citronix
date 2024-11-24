@@ -11,6 +11,7 @@ import com.citronix.citronix.model.Farm;
 import com.citronix.citronix.model.Field;
 import com.citronix.citronix.repository.FarmRepository;
 import com.citronix.citronix.repository.FieldRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +20,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional
 public class FieldServices {
     @Autowired
     private FieldRepository fieldRepository;

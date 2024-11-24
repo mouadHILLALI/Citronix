@@ -5,6 +5,7 @@ import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @Data
@@ -20,6 +21,8 @@ public class Field {
     private double surface;
     @ManyToOne(fetch = FetchType.LAZY)
     private Farm farm;
+    @OneToMany
+    private List<Tree> trees;
     public Field(){
     }
     public Field(Farm farm, double surface, UUID id) {
