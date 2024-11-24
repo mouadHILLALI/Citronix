@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import jdk.jfr.Timestamp;
 import lombok.*;
 import org.antlr.v4.runtime.misc.NotNull;
+import org.apache.logging.log4j.message.Message;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -27,6 +28,6 @@ public class Farm {
     @Timestamp
     private LocalDate creationTime;
     private LocalDate deletedAt;
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Field> fields;
 }

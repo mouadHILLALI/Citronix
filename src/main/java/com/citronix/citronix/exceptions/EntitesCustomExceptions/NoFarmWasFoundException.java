@@ -1,4 +1,4 @@
-package com.citronix.citronix.exceptions;
+package com.citronix.citronix.exceptions.EntitesCustomExceptions;
 
 public class NoFarmWasFoundException extends RuntimeException {
     public NoFarmWasFoundException() {
