@@ -10,6 +10,7 @@ import java.util.UUID;
 @Data
 @AllArgsConstructor
 @Entity(name = "fields")
+@Builder
 public class Field {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
